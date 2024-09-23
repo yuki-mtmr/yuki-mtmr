@@ -1,16 +1,19 @@
-## Hi there 👋
+# About Me
 
-<!--
-**yuki-mtmr/yuki-mtmr** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+1. I'm a web frontend and backend developer from Japan
 
-Here are some ideas to get you started:
+2. My favorite is Python
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+![](https://github-readme-stats.vercel.app/api/top-langs?username=yuki-mtmr&show_icons=true&locale=en&layout=compact)
+
+## Programming Languages
+
+<img src="https://skillicons.dev/icons?i=html,css,java,js,python,ruby," /> <br /><br />
+
+## Frameworks and Library
+
+<img src="https://skillicons.dev/icons?i=spring,rails,react,vue,django" /> <br /><br />
+
+## DB and Dev Tools etc
+
+<img src="https://skillicons.dev/icons?i=mysql,docker,git,github,vscode,linux,aws,gcp" /> <br /><br />

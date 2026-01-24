@@ -6,7 +6,7 @@ user:
   location: "Japan"
   bio: |
     Web Application Engineer & AI Engineer from Japan.
-    Building modern web apps with Python, TypeScript, and Ruby.
+    Building modern web apps with Python and TypeScript.
 
 # 技術スタック（skill-iconsで使用）
 # 利用可能アイコン: https://github.com/tandpfun/skill-icons#icons-list
@@ -14,7 +14,6 @@ skills:
   languages:
     - python
     - typescript
-    - ruby
     - java
     - javascript
   frontend:
@@ -23,7 +22,6 @@ skills:
     - html
     - css
   backend:
-    - rails
     - django
     - spring
     - nodejs

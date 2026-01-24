@@ -12,6 +12,8 @@ from urllib.parse import quote
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
+from src.github_stats import fetch_user_stats, fetch_contributions, format_stats_for_display
+
 
 def load_config(config_path: Path) -> dict:
     """
@@ -46,6 +48,30 @@ def create_jinja_env(template_dir: Path) -> Environment:
     return env
 
 
+def get_github_stats(username: str) -> dict:
+    """
+    GitHub APIから統計データを取得してフォーマットする。
+
+    Args:
+        username: GitHubユーザー名
+
+    Returns:
+        フォーマット済み統計データの辞書
+    """
+    user_stats = fetch_user_stats(username)
+    contributions = fetch_contributions(username)
+
+    stats = {
+        'public_repos': user_stats.get('public_repos', 0),
+        'followers': user_stats.get('followers', 0),
+        'following': user_stats.get('following', 0),
+        'contributions': contributions
+    }
+
+    formatted = format_stats_for_display(stats)
+    return formatted
+
+
 def generate_readme(config: dict, env: Environment) -> str:
     """
     設定に基づいてREADMEを生成する。
@@ -72,6 +98,11 @@ def main():
     # 設定読み込み
     print(f'設定ファイルを読み込み中: {config_path}')
     config = load_config(config_path)
+
+    # GitHub統計を取得
+    username = config['user']['github_username']
+    print(f'GitHub統計を取得中: {username}')
+    config['github_stats'] = get_github_stats(username)
 
     # Jinja2環境作成
     env = create_jinja_env(template_dir)

@@ -11,7 +11,7 @@ class TestGenerateReadme:
 
     def test_load_config_returns_dict(self):
         """load_config関数が辞書を返すことを確認"""
-        from src.generate import load_config
+        from generate import load_config
 
         config_path = Path(__file__).parent.parent / 'profile-config.yaml'
         result = load_config(config_path)
@@ -22,7 +22,7 @@ class TestGenerateReadme:
 
     def test_config_has_no_ruby(self):
         """設定からRubyが削除されていることを確認"""
-        from src.generate import load_config
+        from generate import load_config
 
         config_path = Path(__file__).parent.parent / 'profile-config.yaml'
         result = load_config(config_path)
@@ -32,7 +32,7 @@ class TestGenerateReadme:
 
     def test_bio_has_no_ruby(self):
         """bioにRubyの記述がないことを確認"""
-        from src.generate import load_config
+        from generate import load_config
 
         config_path = Path(__file__).parent.parent / 'profile-config.yaml'
         result = load_config(config_path)
@@ -42,10 +42,10 @@ class TestGenerateReadme:
 
     def test_get_github_stats_returns_formatted_dict(self):
         """get_github_stats関数がフォーマット済み辞書を返すことを確認"""
-        from src.generate import get_github_stats
+        from generate import get_github_stats
 
-        with patch('src.generate.fetch_user_stats') as mock_fetch:
-            with patch('src.generate.fetch_contributions') as mock_contrib:
+        with patch('generate.fetch_user_stats') as mock_fetch:
+            with patch('generate.fetch_contributions') as mock_contrib:
                 mock_fetch.return_value = {
                     'public_repos': 42,
                     'followers': 100,
@@ -63,7 +63,7 @@ class TestGenerateReadme:
 
     def test_generate_readme_includes_github_stats(self):
         """生成されたREADMEにGitHub統計が含まれることを確認"""
-        from src.generate import create_jinja_env, generate_readme
+        from generate import create_jinja_env, generate_readme
 
         template_dir = Path(__file__).parent.parent / 'src'
         env = create_jinja_env(template_dir)
@@ -98,10 +98,9 @@ class TestGenerateReadme:
 
     def test_main_function_runs_successfully(self):
         """main関数が正常に実行されることを確認"""
-        from unittest.mock import patch, mock_open
-        import io
+        from unittest.mock import mock_open
 
-        with patch('src.generate.get_github_stats') as mock_stats:
+        with patch('generate.get_github_stats') as mock_stats:
             mock_stats.return_value = {
                 'repos': '10',
                 'followers': '5',
@@ -109,21 +108,17 @@ class TestGenerateReadme:
                 'contributions': '100'
             }
 
-            with patch('builtins.open', mock_open()) as mock_file:
-                from src.generate import main
-                # main関数はファイルを書き込むので、実行を確認
-                # 実際のテストでは副作用を避けるためモックを使用
-                # ここでは関数がインポートできることを確認
+            with patch('builtins.open', mock_open()):
+                from generate import main
                 assert callable(main)
 
     def test_create_jinja_env_has_urlencode_filter(self):
         """Jinja2環境にurlencodeフィルタが追加されていることを確認"""
-        from src.generate import create_jinja_env
+        from generate import create_jinja_env
 
         template_dir = Path(__file__).parent.parent / 'src'
         env = create_jinja_env(template_dir)
 
         assert 'urlencode' in env.filters
-        # フィルタが正しく動作することを確認
         result = env.filters['urlencode']('hello world')
         assert result == 'hello%20world'

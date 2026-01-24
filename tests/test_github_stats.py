@@ -12,10 +12,9 @@ class TestGitHubStats:
 
     def test_fetch_user_stats_returns_dict(self):
         """fetch_user_stats関数が辞書を返すことを確認"""
-        from src.github_stats import fetch_user_stats
+        from github_stats import fetch_user_stats
 
-        with patch('src.github_stats.requests.get') as mock_get:
-            # モックレスポンスを設定
+        with patch('github_stats.requests.get') as mock_get:
             mock_response = MagicMock()
             mock_response.status_code = 200
             mock_response.json.return_value = {
@@ -34,9 +33,9 @@ class TestGitHubStats:
 
     def test_fetch_user_stats_returns_correct_data(self):
         """fetch_user_stats関数が正しいデータを返すことを確認"""
-        from src.github_stats import fetch_user_stats
+        from github_stats import fetch_user_stats
 
-        with patch('src.github_stats.requests.get') as mock_get:
+        with patch('github_stats.requests.get') as mock_get:
             mock_response = MagicMock()
             mock_response.status_code = 200
             mock_response.json.return_value = {
@@ -55,27 +54,25 @@ class TestGitHubStats:
 
     def test_fetch_user_stats_handles_api_error(self):
         """API エラー時にデフォルト値を返すことを確認"""
-        from src.github_stats import fetch_user_stats
+        from github_stats import fetch_user_stats
 
-        with patch('src.github_stats.requests.get') as mock_get:
+        with patch('github_stats.requests.get') as mock_get:
             mock_response = MagicMock()
             mock_response.status_code = 404
             mock_get.return_value = mock_response
 
             result = fetch_user_stats('nonexistent-user')
 
-            # エラー時はデフォルト値を返す
             assert result['public_repos'] == 0
             assert result['followers'] == 0
 
     def test_fetch_contributions_returns_count(self):
         """fetch_contributions関数が年間コントリビューション数を返すことを確認"""
-        from src.github_stats import fetch_contributions
+        from github_stats import fetch_contributions
 
-        with patch('src.github_stats.requests.get') as mock_get:
+        with patch('github_stats.requests.get') as mock_get:
             mock_response = MagicMock()
             mock_response.status_code = 200
-            # コントリビューショングラフのHTML（簡易版）
             mock_response.text = '''
             <td class="ContributionCalendar-day" data-level="2" data-date="2024-01-01">1</td>
             <td class="ContributionCalendar-day" data-level="3" data-date="2024-01-02">2</td>
@@ -89,7 +86,7 @@ class TestGitHubStats:
 
     def test_format_stats_for_display(self):
         """統計データを表示用にフォーマットする関数のテスト"""
-        from src.github_stats import format_stats_for_display
+        from github_stats import format_stats_for_display
 
         stats = {
             'public_repos': 42,
@@ -106,9 +103,9 @@ class TestGitHubStats:
 
     def test_fetch_user_stats_handles_network_error(self):
         """ネットワークエラー時にデフォルト値を返すことを確認"""
-        from src.github_stats import fetch_user_stats
+        from github_stats import fetch_user_stats
 
-        with patch('src.github_stats.requests.get') as mock_get:
+        with patch('github_stats.requests.get') as mock_get:
             import requests
             mock_get.side_effect = requests.RequestException('Network error')
 
@@ -119,9 +116,9 @@ class TestGitHubStats:
 
     def test_fetch_contributions_handles_network_error(self):
         """ネットワークエラー時に0を返すことを確認"""
-        from src.github_stats import fetch_contributions
+        from github_stats import fetch_contributions
 
-        with patch('src.github_stats.requests.get') as mock_get:
+        with patch('github_stats.requests.get') as mock_get:
             import requests
             mock_get.side_effect = requests.RequestException('Network error')
 
@@ -131,9 +128,9 @@ class TestGitHubStats:
 
     def test_fetch_contributions_handles_404(self):
         """404エラー時に0を返すことを確認"""
-        from src.github_stats import fetch_contributions
+        from github_stats import fetch_contributions
 
-        with patch('src.github_stats.requests.get') as mock_get:
+        with patch('github_stats.requests.get') as mock_get:
             mock_response = MagicMock()
             mock_response.status_code = 404
             mock_get.return_value = mock_response
@@ -144,12 +141,11 @@ class TestGitHubStats:
 
     def test_fetch_contributions_with_new_pattern(self):
         """新しいGitHub UIパターンでコントリビューション数を取得できることを確認"""
-        from src.github_stats import fetch_contributions
+        from github_stats import fetch_contributions
 
-        with patch('src.github_stats.requests.get') as mock_get:
+        with patch('github_stats.requests.get') as mock_get:
             mock_response = MagicMock()
             mock_response.status_code = 200
-            # 新しいパターン
             mock_response.text = '123 contributions'
             mock_get.return_value = mock_response
 
@@ -159,7 +155,7 @@ class TestGitHubStats:
 
     def test_default_stats_returns_zeros(self):
         """_default_stats関数がゼロ値を返すことを確認"""
-        from src.github_stats import _default_stats
+        from github_stats import _default_stats
 
         result = _default_stats()
 

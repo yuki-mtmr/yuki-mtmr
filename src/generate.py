@@ -12,7 +12,7 @@ from urllib.parse import quote
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
-from src.github_stats import fetch_user_stats, fetch_contributions, format_stats_for_display
+from github_stats import fetch_user_stats, fetch_contributions, format_stats_for_display
 
 
 def load_config(config_path: Path) -> dict:

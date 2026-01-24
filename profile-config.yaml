@@ -1,0 +1,56 @@
+# ユーザー基本情報
+user:
+  name: "Yuki Matsumori"
+  github_username: "yuki-mtmr"
+  title: "Web Application Engineer / AI Engineer"
+  location: "Japan"
+  bio: |
+    Webアプリケーション開発とAI開発に取り組むエンジニア。
+    フロントエンドからバックエンドまで幅広く対応。
+
+# 技術スタック（skill-iconsで使用）
+# 利用可能アイコン: https://github.com/tandpfun/skill-icons#icons-list
+skills:
+  languages:
+    - python
+    - typescript
+    - ruby
+    - java
+    - javascript
+  frontend:
+    - react
+    - vue
+    - html
+    - css
+  backend:
+    - rails
+    - django
+    - spring
+    - nodejs
+  infrastructure:
+    - docker
+    - aws
+    - gcp
+    - linux
+  tools:
+    - git
+    - github
+    - vscode
+    - mysql
+
+# SNSリンク（空欄は非表示）
+social:
+  twitter: ""
+  qiita: ""
+  zenn: ""
+
+# デザイン設定
+theme:
+  accent_color: "58a6ff"
+  stats_theme: "transparent"
+  hide_border: true
+
+# ブログRSSフィード（空欄は非表示）
+rss:
+  qiita: ""
+  zenn: ""

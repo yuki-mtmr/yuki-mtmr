@@ -2,8 +2,8 @@ name: Update Profile README
 
 on:
   schedule:
-    # 毎週月曜 UTC 0時（日本時間9時）
-    - cron: '0 0 * * 1'
+    # 毎日 UTC 0時（日本時間9時）
+    - cron: '0 0 * * *'
   push:
     branches: [main]
     paths:

@@ -139,19 +139,49 @@ class TestGitHubStats:
 
             assert result == 0
 
-    def test_fetch_contributions_with_new_pattern(self):
-        """新しいGitHub UIパターンでコントリビューション数を取得できることを確認"""
+    def test_fetch_contributions_with_graphql(self):
+        """GraphQL APIでコントリビューション数を取得できることを確認"""
         from github_stats import fetch_contributions
+        import os
 
-        with patch('github_stats.requests.get') as mock_get:
-            mock_response = MagicMock()
-            mock_response.status_code = 200
-            mock_response.text = '123 contributions'
-            mock_get.return_value = mock_response
+        with patch.dict(os.environ, {'GITHUB_TOKEN': 'test_token'}):
+            with patch('github_stats.requests.post') as mock_post:
+                mock_response = MagicMock()
+                mock_response.status_code = 200
+                mock_response.json.return_value = {
+                    'data': {
+                        'user': {
+                            'contributionsCollection': {
+                                'contributionCalendar': {
+                                    'totalContributions': 456
+                                }
+                            }
+                        }
+                    }
+                }
+                mock_post.return_value = mock_response
 
-            result = fetch_contributions('yuki-mtmr')
+                result = fetch_contributions('yuki-mtmr')
 
-            assert result == 123
+                assert result == 456
+
+    def test_fetch_contributions_fallback_to_scrape(self):
+        """トークンがない場合はスクレイピングにフォールバックすることを確認"""
+        from github_stats import fetch_contributions
+        import os
+
+        with patch.dict(os.environ, {}, clear=True):
+            # GITHUB_TOKENを削除
+            if 'GITHUB_TOKEN' in os.environ:
+                del os.environ['GITHUB_TOKEN']
+
+            with patch('github_stats._fetch_contributions_scrape') as mock_scrape:
+                mock_scrape.return_value = 123
+
+                result = fetch_contributions('yuki-mtmr')
+
+                mock_scrape.assert_called_once_with('yuki-mtmr')
+                assert result == 123
 
     def test_default_stats_returns_zeros(self):
         """_default_stats関数がゼロ値を返すことを確認"""

@@ -5,7 +5,9 @@ GitHub APIを使用してユーザーの統計情報を取得する。
 外部サービス（github-readme-stats等）に依存せず、
 直接APIから取得してテキスト表示する。
 """
+import os
 import re
+from datetime import datetime, timedelta
 from typing import Dict
 
 import requests
@@ -54,13 +56,75 @@ def fetch_contributions(username: str) -> int:
     """
     GitHubのコントリビューション数を取得する。
 
-    GitHubプロフィールページからコントリビューション数をスクレイピング。
+    GitHub GraphQL APIを使用して過去1年間のコントリビューション数を取得。
+    GITHUB_TOKEN環境変数が必要。
 
     Args:
         username: GitHubユーザー名
 
     Returns:
         年間コントリビューション数
+    """
+    token = os.environ.get('GITHUB_TOKEN')
+
+    if not token:
+        # トークンがない場合はスクレイピングにフォールバック
+        return _fetch_contributions_scrape(username)
+
+    # 過去1年間の日付を計算
+    now = datetime.utcnow()
+    one_year_ago = now - timedelta(days=365)
+
+    query = """
+    query($username: String!, $from: DateTime!, $to: DateTime!) {
+      user(login: $username) {
+        contributionsCollection(from: $from, to: $to) {
+          contributionCalendar {
+            totalContributions
+          }
+        }
+      }
+    }
+    """
+
+    variables = {
+        'username': username,
+        'from': one_year_ago.isoformat() + 'Z',
+        'to': now.isoformat() + 'Z'
+    }
+
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+
+    try:
+        response = requests.post(
+            'https://api.github.com/graphql',
+            json={'query': query, 'variables': variables},
+            headers=headers,
+            timeout=10
+        )
+
+        if response.status_code != 200:
+            return 0
+
+        data = response.json()
+        contributions = (
+            data.get('data', {})
+            .get('user', {})
+            .get('contributionsCollection', {})
+            .get('contributionCalendar', {})
+            .get('totalContributions', 0)
+        )
+        return contributions
+    except (requests.RequestException, KeyError, TypeError):
+        return 0
+
+
+def _fetch_contributions_scrape(username: str) -> int:
+    """
+    スクレイピングでコントリビューション数を取得（フォールバック用）
     """
     url = f'https://github.com/{username}'
 
@@ -73,19 +137,8 @@ def fetch_contributions(username: str) -> int:
         if response.status_code != 200:
             return 0
 
-        # コントリビューション数を正規表現で抽出
-        # パターン1: "1,234 contributions in the last year"
         match = re.search(
             r'([\d,]+)\s+contributions?\s+in\s+the\s+last\s+year',
-            response.text
-        )
-        if match:
-            count_str = match.group(1).replace(',', '')
-            return int(count_str)
-
-        # パターン2: 新しいGitHub UIのパターン
-        match = re.search(
-            r'(\d[\d,]*)\s+contribution',
             response.text
         )
         if match:

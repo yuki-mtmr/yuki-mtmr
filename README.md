@@ -4,7 +4,7 @@
 ## Hi there 👋
 
 Web Application Engineer & AI Engineer from Japan.
-Building modern web apps with Python, TypeScript, and Ruby.
+Building modern web apps with Python, TypeScript.
 
 
 ### About Me

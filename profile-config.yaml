@@ -4,10 +4,9 @@ user:
   github_username: "yuki-mtmr"
   title: "Web Application Engineer / AI Engineer"
   location: "Japan"
-  tagline: "And you don't seem to understand..."
   bio: |
-    Webアプリケーション開発とAI開発に取り組むエンジニア。
-    フロントエンドからバックエンドまで幅広く対応。
+    Web Application Engineer & AI Engineer from Japan.
+    Building modern web apps with Python, TypeScript, and Ruby.
 
 # 技術スタック（skill-iconsで使用）
 # 利用可能アイコン: https://github.com/tandpfun/skill-icons#icons-list

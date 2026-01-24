@@ -45,7 +45,7 @@ Building modern web apps with Python and TypeScript.
 
 | 📊 Stats | Count |
 |----------|-------|
-| 📦 Public Repos | **49** |
+| 📦 Public Repos | **33** |
 | 👥 Followers | **11** |
 | 👤 Following | **12** |
 | 🔥 Contributions (Last Year) | **0** |
